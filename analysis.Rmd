@@ -1,0 +1,52 @@
+---
+title: "analysis"
+output: html_document
+---
+
+```{r setup}
+
+## Clear workspace
+rm(list=ls())
+
+## The "pacman" package automatically install missing packages and load them
+if (!require("pacman")) install.packages("pacman", repos = 'https://stat.ethz.ch/CRAN/'); 
+
+pacman::p_load(
+  # data processing
+  tidyverse,  # collection of the tidyverse packages
+  stringr,    #   - for string functions
+  forcats,    #   - utility functions for working with factor levels
+  lubridate,  #   - utility for parsing and performing arithematic on dates 
+  tools,      #   - for package development, administration and documentation
+  data.table, #   - for data manipulation 
+  tibble      #   - to create data frames
+)
+```
+
+## Data Import
+
+```{r import}
+
+ # Create a list of all raw .sd2 files
+file_list <- list.files(path = file.path("02 raw data"), pattern = "*.sd2", recursive = TRUE, full.names= TRUE)
+
+# read all .sd2 files into a single data table
+sd2_raw <- do.call("rbind", lapply(file_list, function(filename)
+  data.frame(Filename = filename, read.delim(filename, sep = ","))
+))
+
+sd2_raw %>% 
+  group_by(Condition) %>% 
+  summarise(mean(ER...))
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
