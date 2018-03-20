@@ -35,18 +35,16 @@ sd2_raw <- do.call("rbind", lapply(file_list, function(filename)
   data.frame(Filename = filename, read.delim(filename, sep = ","))
 ))
 
+conditionNames <- matrix(c("C01","trackpad", "C02", "index finger", "C03", "thumb", "C04", "sway"), ncol = 2, byrow = T)
+
+colnames(conditionNames) <- c("Condition", "Condition Name")
+
+sd2_raw <- sd2_raw %>% 
+  merge(conditionNames) %>% 
+  select(`Condition Name`, everything())
+
 sd2_raw %>% 
   group_by(Condition) %>% 
-  summarise(mean(ER...))
+  summarise(mean(TP.bps.))
 
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
