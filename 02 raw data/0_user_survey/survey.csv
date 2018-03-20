@@ -1,1 +1,9 @@
-Participant,Age,Gender,Study Major,Usual Input Mode (generally),Preferred Input Mode (study),Mouse Use,Trackpad Use,Remote Mouse Use
+Participant;Age;Gender;Study Major;Usual Input Mode (generally);Preferred Input Mode (study);Mouse Use;Trackpad Use;Remote Mouse Use
+P1;26;male;Computer Science;Mouse;Trackpad of laptop;Daily;Daily;Never
+P2;26;male;Computer Science;Trackpad of  laptop;Trackpad of laptop;Never;Daily;Never
+P3;35;female;Psychology;Mouse;Mobile phone as a touchpad - one hand;Daily;Weekly;Never
+P4;27;female;Psychology;Trackpad of  laptop;Mobile phone as a touchpad - two hands;Daily;Daily;Never
+P5;22;male;Computer Science;Mouse;Trackpad of laptop;Daily;Weekly;Never
+P6;27;female;Psychology;Mouse;Trackpad of laptop;Daily;Daily;Never
+P7;27;male;Computer Science;Trackpad of  laptop;Mobile phone as a touchpad - one hand;Daily;Daily;Never
+P8;28;female;Computer Science;Trackpad of  laptop;Trackpad of laptop;Daily;Daily;Never
