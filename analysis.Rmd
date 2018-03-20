@@ -27,26 +27,49 @@ pacman::p_load(
 
 ```{r import}
 
- # Create a list of all raw .sd2 files
-file_list <- list.files(path = file.path("02 raw data"), pattern = "*.sd2", recursive = TRUE, full.names= TRUE)
+# Create a function that imports all .sd2 files from a directory
 
-# read all .sd2 files into a single data table
-sd2_raw <- do.call("rbind", lapply(file_list, function(filename)
-  data.frame(Filename = filename, read.delim(filename, sep = ","))
-))
+import_raw_data_file <- function(dir_name, condition_name) {
+  
+  file_list <- list.files(path = file.path("02 raw data", dir_name), pattern = "*.sd2", recursive = TRUE, full.names = TRUE)
+  
+  raw_data <- do.call("rbind", lapply(file_list, function(filename)
+  data.frame(read.delim(filename, sep = ","))))
+  
+  # Overwrite Condition because it was used inconsistently during the experiments
+  # Therefore, the correct condition needs to be given as a function parameter
+  raw_data$Condition = condition_name
+  
+  return(raw_data)
+  
+}
 
-conditionNames <- matrix(c("C01","trackpad", "C02", "index finger", "C03", "thumb", "C04", "sway"), ncol = 2, byrow = T)
+# import all .sd2 files from all conditions and combine them into a single table
 
-colnames(conditionNames) <- c("Condition", "Condition Name")
-
-
-sd2_raw <- sd2_raw %>% 
-  merge(conditionNames) %>% 
-  select(`Condition Name`, everything())
-
-sd2_raw %>% 
-  group_by(Condition) %>% 
-  summarise(mean(TP.bps.))
+sd2_data_raw <- rbind(
+  import_raw_data_file("1_trackpad", "trackpad"),
+  import_raw_data_file("2_index finger", "index finger"),
+  import_raw_data_file("3_thumb", "thumb"),
+  import_raw_data_file("4_sway", "sway")
+)
 
 ```
 
+## Data Clean Up
+
+```{r clean up}
+
+sd2_data_raw <- sd2_data_raw %>% 
+  select(
+    Participant, 
+    Condition, 
+    'Target Amplitude' = A, 
+    'Target Width' = W, 
+    'Pointing Time (ms)' = PT.ms.,
+    'Selection Time (ms)' = ST.ms.,
+    'Movement Time (ms)' = MT.ms.,
+    'Error Rate (%)' = ER...,
+    'Throughput (bits/s)' = TP.bps.
+  )
+
+```
