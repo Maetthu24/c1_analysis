@@ -4,4 +4,4 @@
 .Ruserdata
 
 # Ignore generated html files
-.html
+*.html
