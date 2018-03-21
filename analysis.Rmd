@@ -46,7 +46,7 @@ import_raw_data_file <- function(dir_name, condition_name) {
 
 # import all .sd2 files from all conditions and combine them into a single table
 
-sd2_data_raw <- rbind(
+data_raw <- rbind(
   import_raw_data_file("1_trackpad", "trackpad"),
   import_raw_data_file("2_index finger", "index finger"),
   import_raw_data_file("3_thumb", "thumb"),
@@ -59,17 +59,103 @@ sd2_data_raw <- rbind(
 
 ```{r clean up}
 
-sd2_data_raw <- sd2_data_raw %>% 
+# Keep only the columns of interest and give them more readable names
+
+data_raw <- data_raw %>% 
   select(
-    Participant, 
-    Condition, 
-    'Target Amplitude' = A, 
-    'Target Width' = W, 
-    'Pointing Time (ms)' = PT.ms.,
-    'Selection Time (ms)' = ST.ms.,
-    'Movement Time (ms)' = MT.ms.,
-    'Error Rate (%)' = ER...,
-    'Throughput (bits/s)' = TP.bps.
+    Participant,
+    Condition,
+    Amplitude = A,
+    Width = W,
+    PointingTime = PT.ms.,
+    SelectionTime = ST.ms.,
+    MovementTime = MT.ms.,
+    ErrorRate = ER...,
+    Throughput = TP.bps.
   )
+
+# Spread the table to make it more suited for further analysis
+
+data_pointing_time <- data_raw %>%
+  select(Participant:Width, PointingTime) %>% 
+  spread(key = Condition, value = PointingTime) %>% 
+  select(Participant:Width,
+         PointingTime_trackpad = trackpad,
+         PointingTime_index_finger = 'index finger',
+         PointingTime_thumb = thumb,
+         PointingTime_sway = sway
+  )
+
+data_selection_time <- data_raw %>%
+  select(Participant:Width, SelectionTime) %>% 
+  spread(key = Condition, value = SelectionTime) %>% 
+  select(Participant:Width,
+         SelectionTime_trackpad = trackpad,
+         SelectionTime_index_finger = 'index finger',
+         SelectionTime_thumb = thumb,
+         SelectionTime_sway = sway
+  )
+
+data_movement_time <- data_raw %>%
+  select(Participant:Width, MovementTime) %>% 
+  spread(key = Condition, value = MovementTime) %>% 
+  select(Participant:Width,
+         MovementTime_trackpad = trackpad,
+         MovementTime_index_finger = 'index finger',
+         MovementTime_thumb = thumb,
+         MovementTime_sway = sway
+  )
+
+data_error_rate <- data_raw %>%
+  select(Participant:Width, ErrorRate) %>% 
+  spread(key = Condition, value = ErrorRate) %>% 
+  select(Participant:Width,
+         ErrorRate_trackpad = trackpad,
+         ErrorRate_index_finger = 'index finger',
+         ErrorRate_thumb = thumb,
+         ErrorRate_sway = sway
+  )
+
+data_throughput <- data_raw %>%
+  select(Participant:Width, Throughput) %>% 
+  spread(key = Condition, value = Throughput) %>% 
+  select(Participant:Width,
+         Throughput_trackpad = trackpad,
+         Throughput_index_finger = 'index finger',
+         Throughput_thumb = thumb,
+         Throughput_sway = sway
+  )
+
+data_spread <- merge(data_pointing_time, data_selection_time)
+data_spread <- merge(data_spread, data_movement_time)
+data_spread <- merge(data_spread, data_error_rate)
+data_spread <- merge(data_spread, data_throughput)
+
+data_spread <- data_spread %>% 
+  arrange(Participant, Amplitude, Width)
+
+```
+
+## Example of possible analysis
+
+```{r example analysis}
+
+# This code compares the movement time of index_finger/thumb/sway against the baseline (trackpad)
+
+# Das Resultat müsst mer no sinnvoll plotte oder zämefasse für en guete Output
+
+speed_difference_to_trackpad <- data_spread %>% 
+  transmute(
+    Participant,
+    Amplitude,
+    Width,
+    IndexFinger_diff = MovementTime_index_finger - MovementTime_trackpad,
+    Thumb_diff = MovementTime_thumb - MovementTime_trackpad,
+    Sway_diff = MovementTime_sway - MovementTime_trackpad
+  )
+
+speed_difference_aggregated <- speed_difference_to_trackpad %>% 
+  group_by(Participant) %>% 
+  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff))
 
 ```
