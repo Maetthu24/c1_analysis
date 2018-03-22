@@ -134,16 +134,13 @@ data_spread <- merge(data_spread, data_throughput)
 data_spread <- data_spread %>% 
   arrange(Participant, Amplitude, Width)
 
-```
+## In our analysis, we will not focus on the differences in amplitude and width. For this reason, we use the average for each participant for each mode.
+data_mean_per_participant <- data_spread %>%
+  group_by(Participant) %>% 
+  summarise(PointingTime_trackpad = mean(PointingTime_trackpad), PointingTime_index_finger = mean(PointingTime_index_finger), PointingTime_thumb = mean(PointingTime_thumb), PointingTime_sway = mean(PointingTime_sway), SelectionTime_trackpad = mean(SelectionTime_trackpad), SelectionTime_index_finger = mean(SelectionTime_index_finger), SelectionTime_thumb = mean(SelectionTime_thumb), SelectionTime_sway = mean(SelectionTime_sway), MovementTime_trackpad = mean(MovementTime_trackpad), MovementTime_index_finger = mean(MovementTime_index_finger), MovementTime_thumb = mean(MovementTime_thumb), MovementTime_sway = mean(MovementTime_sway), ErrorRate_trackpad = mean(ErrorRate_trackpad), ErrorRate_index_finger = mean(ErrorRate_index_finger), ErrorRate_thumb = mean(ErrorRate_thumb), ErrorRate_sway = mean(ErrorRate_sway), Throughput_trackpad = mean(Throughput_trackpad), Throughput_index_finger = mean(Throughput_index_finger), Throughput_thumb = mean(Throughput_thumb), Throughput_sway = mean(Throughput_sway))
 
-## Example of possible analysis
-
-```{r example analysis}
-
-# This code compares the movement time of index_finger/thumb/sway against the baseline (trackpad)
-
-# Das Resultat müsst mer no sinnvoll plotte oder zämefasse für en guete Output
-
+## We are intersted in the difference in speed and accuracy between the trackpad (baseline input mode) and the three mobile modes: with index finger, thumb and in sway mode.
+# Difference in speed
 speed_difference_to_trackpad <- data_spread %>% 
   transmute(
     Participant,
@@ -154,8 +151,46 @@ speed_difference_to_trackpad <- data_spread %>%
     Sway_diff = MovementTime_sway - MovementTime_trackpad
   )
 
-speed_difference_aggregated <- speed_difference_to_trackpad %>% 
+speed_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>% 
   group_by(Participant) %>% 
-  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff))
+  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
+
+# Difference in accuracy
+accuracy_difference_to_trackpad <- data_spread %>% 
+  transmute(
+    Participant,
+    Amplitude,
+    Width,
+    IndexFinger_diff = ErrorRate_index_finger - ErrorRate_trackpad,
+    Thumb_diff = ErrorRate_thumb - ErrorRate_trackpad,
+    Sway_diff = ErrorRate_sway - ErrorRate_trackpad
+  )
+
+accuracy_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>% 
+  group_by(Participant) %>% 
+  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
 
 ```
+## Summary 
+```{r summary}
+summary(speed_difference_to_trackpad_aggregated)
+```
+
+## Plots
+
+```{r plot1}
+# Plot 1: Throughput for the 4 input modes for the eight participants
+
+
+```
+
+```{r plot2}
+# Plot 2: Speed for the 4 input modes for the eight participants
+
+```
+
+```{r plot3}
+# Plot 3: Accuracy for the 4 input modes for the eight participants
+
+```
+
