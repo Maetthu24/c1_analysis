@@ -180,17 +180,25 @@ summary(speed_difference_to_trackpad_aggregated)
 
 ```{r plot1}
 # Plot 1: Throughput for the 4 input modes for the eight participants
-
+boxplot_throughput <- boxplot(data_throughput[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
+                              ylab = 'Throughput in bits/s')
 
 ```
 
 ```{r plot2}
 # Plot 2: Speed for the 4 input modes for the eight participants
+boxplot_movement_time <- boxplot(data_movement_time[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
+                              ylab = 'Movement Time in ms')
+
+
+
 
 ```
 
 ```{r plot3}
 # Plot 3: Accuracy for the 4 input modes for the eight participants
+boxplot_error_rate <- boxplot(data_error_rate[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
+                              ylab = 'Error Rate in %')
 
 ```
 
