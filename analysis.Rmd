@@ -266,16 +266,19 @@ We understand from these ANOVA tests that not all the means are equals. We still
 
 ```{r }
 TukeyHSD(fit_speed)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
 plot(TukeyHSD(fit_speed), las=1)
 ```
 
 ```{r }
 TukeyHSD(fit_accuracy)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
 plot(TukeyHSD(fit_accuracy), las=1)
 ```
 
 ```{r }
 TukeyHSD(fit_throughput)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
 plot(TukeyHSD(fit_throughput), las=1)
 ```
 
