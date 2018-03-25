@@ -173,6 +173,7 @@ accuracy_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>%
   summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
 
 ```
+
 ## Summary 
 ```{r summary}
 summary(speed_difference_to_trackpad_aggregated)
@@ -288,21 +289,21 @@ ggplot (data = average_error_rate_per_participant, mapping = aes(x = fct_relevel
 ```
 
 ## Statistical analysis
-```{r anova_speed}
+```{r anova speed}
 fit_speed <- aov(MovementTime ~ Condition, data_raw)
 summary(fit_speed)
 m.res <- resid(fit_speed)
 plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime")
 ```
 
-```{r anova_accuracy}
+```{r anova accuracy}
 fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
 summary(fit_accuracy)
 m.res <- resid(fit_accuracy)
 plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
 ```
 
-```{r anovy_throughput}
+```{r anovy throughput}
 fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
@@ -311,23 +312,17 @@ plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
 
-### Tukey Test on the Throughput
-
-```{r tukeyhsd_speed, echo=FALSE}
+```{r }
 TukeyHSD(fit_speed)
 plot(TukeyHSD(fit_speed), las=1)
 ```
 
-### Tukey Test on the Throughput
-
-```{r tukeyhsd_accuracy, echo=FALSE}
+```{r }
 TukeyHSD(fit_accuracy)
 plot(TukeyHSD(fit_accuracy), las=1)
 ```
 
-###Tukey Test on the Throughput
-
-```{r tukeyhsd_throughput, echo=FALSE}
+```{r }
 TukeyHSD(fit_throughput)
 plot(TukeyHSD(fit_throughput), las=1)
 ```
