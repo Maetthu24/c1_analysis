@@ -235,7 +235,7 @@ boxplot_selection_time <- boxplot(data_selection_time[4:7], names = c('Trackpad'
 ```{r lineplot for selection time}
 # Analysis of average troughput per input mode trial for each participant
 average_selection_time_per_participant <- aggregate(data_selection_time[4:7], list(data_selection_time$Participant), mean) %>%
-  rename('Participant' = Group.1, 'Trackpad' = Throughput_trackpad, 'Index Finger' = Throughput_index_finger, 'Thumb' = Throughput_thumb, 'Sway Mode' = Throughput_sway) %>%
+  rename('Participant' = Group.1, 'Trackpad' = SelectionTime_trackpad, 'Index Finger' = SelectionTime_index_finger, 'Thumb' = SelectionTime_thumb, 'Sway Mode' = SelectionTime_sway) %>%
   gather(key = Input_Mode, value = Average_Throughput, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
 ggplot (data = average_selection_time_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Throughput, col = Participant, group = Participant)) +
@@ -255,19 +255,19 @@ boxplot_pointing_time <- boxplot(data_pointing_time[4:7], names = c('Trackpad', 
 
 ```{r lineplot for pointing time}
 # Analysis of average troughput per input mode trial for each participant
-average_troughput_per_participant <- aggregate(data_throughput[4:7], list(data_throughput$Participant), mean) %>%
-  rename('Participant' = Group.1, 'Trackpad' = Throughput_trackpad, 'Index Finger' = Throughput_index_finger, 'Thumb' = Throughput_thumb, 'Sway Mode' = Throughput_sway) %>%
-  gather(key = Input_Mode, value = Average_Throughput, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
+average_pointing_time_per_participant <- aggregate(data_pointing_time[4:7], list(data_pointing_time$Participant), mean) %>%
+  rename('Participant' = Group.1, 'Trackpad' = PointingTime_trackpad, 'Index Finger' = PointingTime_index_finger, 'Thumb' = PointingTime_thumb, 'Sway Mode' = PointingTime_sway) %>%
+  gather(key = Input_Mode, value = Average_PointingTime, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_troughput_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Throughput, col = Participant, group = Participant)) +
+ggplot (data = average_pointing_time_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_PointingTime, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
-  labs(x = 'Input Mode', y = 'Throughput in bits/s')
+  labs(x = 'Input Mode', y = 'Pointing Time in ms')
 ```
 
 
 
-```{r lineplot for error rate}
+```{r boxplot for error rate}
 # Plot 3: Accuracy for the 4 input modes for the eight participants
 
 # Boxplot of the average error rate that participants have for one pointing task
@@ -303,7 +303,8 @@ m.res <- resid(fit_accuracy)
 plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
 ```
 
-```{r anovy throughput}
+
+```{r anova_throughput}
 fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
