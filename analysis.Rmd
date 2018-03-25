@@ -290,7 +290,10 @@ plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
 
-### Tukey Test on the Speed
+### Tukey Test
+
+#### Speed
+
 ```{r tukeyhsd_speed, echo=FALSE}
 TukeyHSD(fit_speed)
 par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
@@ -304,7 +307,8 @@ title(main = "Speed - 95% family-wise confidence level")
 ```
 
 
-### Tukey Test on the Accuracy
+#### Accuracy
+
 ```{r tukeyhsd_accuracy, echo=FALSE}
 TukeyHSD(fit_accuracy)
 par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
@@ -318,7 +322,7 @@ title(main = "Accuracy - 95% family-wise confidence level")
 ```
 
 
-### Tukey Test on the Throughput
+#### Throughput
 ```{r tukeyhsd_throughput, echo=FALSE}
 TukeyHSD(fit_throughput)
 par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
