@@ -21,15 +21,12 @@ pacman::p_load(
   data.table, #   - for data manipulation 
   tibble     #   - to create data frames
 )
-
 ```
 
 ## Data Import
 
 ```{r import}
-
 # Create a function that imports all .sd2 files from a directory
-
 import_raw_data_file <- function(dir_name, condition_name) {
   
   file_list <- list.files(path = file.path("02 raw data", dir_name), pattern = "*.sd2", recursive = TRUE, full.names = TRUE)
@@ -42,11 +39,9 @@ import_raw_data_file <- function(dir_name, condition_name) {
   raw_data$Condition = condition_name
   
   return(raw_data)
-  
 }
 
 # import all .sd2 files from all conditions and combine them into a single table
-
 data_raw <- rbind(
   import_raw_data_file("1_trackpad", "trackpad"),
   import_raw_data_file("2_index finger", "index finger"),
@@ -55,15 +50,12 @@ data_raw <- rbind(
 )
 
 data_raw$Condition <- as.factor(data_raw$Condition)
-
 ```
 
 ## Data Clean Up
 
 ```{r clean up}
-
 # Keep only the columns of interest and give them more readable names
-
 data_raw <- data_raw %>% 
   select(
     Participant,
@@ -78,7 +70,6 @@ data_raw <- data_raw %>%
   )
 
 # Spread the table to make it more suited for further data plot analysis
-
 data_pointing_time <- data_raw %>%
   select(Participant:Width, PointingTime) %>% 
   spread(key = Condition, value = PointingTime) %>% 
@@ -128,9 +119,7 @@ data_throughput <- data_raw %>%
          Throughput_thumb = thumb,
          Throughput_sway = sway
   )
-
 ```
-
 
 ## Plots
 *Note:* With "task" we mean the completion of one pointing exercise containg 13 dots which participants needed to select and click on.
@@ -141,7 +130,6 @@ Boxplot  to summarize the throughputs of each completed task.
 ```{r boxplot_for_troughputs}
 # Boxplot of the average throughput that participants have for one pointing task
 boxplot_throughput <- boxplot(data_throughput[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode', ylab = 'Throughput in bits/s')
-
 ```
 
 ### Average throughput per participant (lineplot)
@@ -158,7 +146,6 @@ ggplot (data = average_troughput_per_participant, mapping = aes(x = fct_relevel(
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Throughput in bits/s')
-
 ```
 
 
@@ -167,7 +154,6 @@ Boxplot to summarize the times that participant used to complet one task.
 ```{r boxplot_for_ movement_time}
 # Boxplot of the average time participant needed to finish one pointing task
 boxplot_movement_time <- boxplot(data_movement_time[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode', ylab = 'Movement Time in ms')
-
 ```
 
 ### Average movement time per participant (lineplot)
@@ -208,7 +194,6 @@ ggplot (data = average_selection_time_per_participant, mapping = aes(x = fct_rel
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Selection time in ms')
-
 ```
 
 
@@ -217,7 +202,6 @@ Boxplot to summarize the times that participant used during each task to move fr
 ```{r boxplot_for_pointing_time}
 # Boxplot of the average pointing time that participants have for one pointing task
 boxplot_pointing_time <- boxplot(data_pointing_time[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode', ylab = 'Pointing Time in ms')
-
 ```
 
 ### Average pointing time per participant (lineplot)
@@ -234,7 +218,6 @@ ggplot (data = average_pointing_time_per_participant, mapping = aes(x = fct_rele
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Pointing Time in ms')
-
 ```
 
 
@@ -243,7 +226,6 @@ Boxplot to summarize the error rates participant had for each completed task.
 ```{r boxplot_for_error_rate}
 # Boxplot of the average error rate that participants have for one pointing task
 boxplot_error_rate <- boxplot(data_error_rate[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode', ylab = 'Error Rate in %')
-
 ```
 
 ### Average error rate per participant (lineplot)
@@ -260,7 +242,6 @@ ggplot(data = average_error_rate_per_participant, mapping = aes(x = fct_relevel(
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Error Rate in %')
-
 ```
 
 ## Statistical analysis
@@ -274,7 +255,6 @@ fit_speed <- aov(MovementTime ~ Condition, data_raw)
 summary(fit_speed)
 m.res <- resid(fit_speed)
 plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime")
-
 ```
 
 #### Accuracy
@@ -284,7 +264,6 @@ fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
 summary(fit_accuracy)
 m.res <- resid(fit_accuracy)
 plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
-
 ```
 
 #### Throughput
@@ -294,7 +273,6 @@ fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
 plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
-
 ```
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
@@ -312,7 +290,6 @@ par(col.main = "white")
 plot(TukeyHSD(fit_speed), las=1)
 par(col.main = "black")
 title(main = "Speed - 95% family-wise confidence level")
-
 ```
 
 
@@ -327,7 +304,6 @@ par(col.main = "white")
 plot(TukeyHSD(fit_accuracy), las=1)
 par(col.main = "black")
 title(main = "Accuracy - 95% family-wise confidence level")
-
 ```
 
 
@@ -342,7 +318,4 @@ par(col.main = "white")
 plot(TukeyHSD(fit_throughput), las=1)
 par(col.main = "black")
 title(main = "Throughput - 95% family-wise confidence level")
-
 ```
-
-
