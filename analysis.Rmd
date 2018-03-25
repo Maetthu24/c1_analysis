@@ -255,7 +255,7 @@ m.res <- resid(fit_accuracy)
 plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
 ```
 
-```{r anovy_throughput}
+```{r anova_throughput}
 fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
