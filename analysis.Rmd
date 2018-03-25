@@ -192,7 +192,7 @@ average_troughput_per_participant <- aggregate(data_throughput[4:7], list(data_t
   rename('Participant' = Group.1, 'Trackpad' = Throughput_trackpad, 'Index Finger' = Throughput_index_finger, 'Thumb' = Throughput_thumb, 'Sway Mode' = Throughput_sway) %>%
   gather(key = Input_Mode, value = Average_Throughput, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_troughput_per_participant, mapping = aes(x = Input_Mode, y = Average_Throughput, col = Participant, group = Participant)) +
+ggplot (data = average_troughput_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Throughput, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Throughput in bits/s')
@@ -211,7 +211,7 @@ average_movement_time_per_participant <- aggregate(data_movement_time[4:7], list
   rename('Participant' = Group.1, 'Trackpad' = MovementTime_trackpad, 'Index Finger' = MovementTime_index_finger, 'Thumb' = MovementTime_thumb, 'Sway Mode' = MovementTime_sway) %>%
   gather(key = Input_Mode, value = Average_Movement_Time, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_movement_time_per_participant, mapping = aes(x = Input_Mode, y = Average_Movement_Time, col = Participant, group = Participant)) +
+ggplot (data = average_movement_time_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Movement_Time, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Movement Time in ms' )
@@ -233,7 +233,7 @@ average_error_rate_per_participant <- aggregate(data_error_rate[4:7], list(data_
   rename('Participant' = Group.1, 'Trackpad' = ErrorRate_trackpad, 'Index Finger' = ErrorRate_index_finger, 'Thumb' = ErrorRate_thumb, 'Sway Mode' = ErrorRate_sway) %>%
   gather(key = Input_Mode, value = Average_Error_Rate, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode, y = Average_Error_Rate, col = Participant, group = Participant)) +
+ggplot (data = average_error_rate_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Error_Rate, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Error Rate in %')
