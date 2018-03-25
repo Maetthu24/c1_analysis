@@ -19,7 +19,7 @@ pacman::p_load(
   lubridate,  #   - utility for parsing and performing arithematic on dates 
   tools,      #   - for package development, administration and documentation
   data.table, #   - for data manipulation 
-  tibble      #   - to create data frames
+  tibble     #   - to create data frames
 )
 ```
 
@@ -53,6 +53,7 @@ data_raw <- rbind(
   import_raw_data_file("4_sway", "sway")
 )
 
+data_raw$Condition <- as.factor(data_raw$Condition)
 ```
 
 ## Data Clean Up
@@ -138,6 +139,7 @@ data_spread <- data_spread %>%
 data_mean_per_participant <- data_spread %>%
   group_by(Participant) %>% 
   summarise(PointingTime_trackpad = mean(PointingTime_trackpad), PointingTime_index_finger = mean(PointingTime_index_finger), PointingTime_thumb = mean(PointingTime_thumb), PointingTime_sway = mean(PointingTime_sway), SelectionTime_trackpad = mean(SelectionTime_trackpad), SelectionTime_index_finger = mean(SelectionTime_index_finger), SelectionTime_thumb = mean(SelectionTime_thumb), SelectionTime_sway = mean(SelectionTime_sway), MovementTime_trackpad = mean(MovementTime_trackpad), MovementTime_index_finger = mean(MovementTime_index_finger), MovementTime_thumb = mean(MovementTime_thumb), MovementTime_sway = mean(MovementTime_sway), ErrorRate_trackpad = mean(ErrorRate_trackpad), ErrorRate_index_finger = mean(ErrorRate_index_finger), ErrorRate_thumb = mean(ErrorRate_thumb), ErrorRate_sway = mean(ErrorRate_sway), Throughput_trackpad = mean(Throughput_trackpad), Throughput_index_finger = mean(Throughput_index_finger), Throughput_thumb = mean(Throughput_thumb), Throughput_sway = mean(Throughput_sway))
+
 
 ## We are intersted in the difference in speed and accuracy between the trackpad (baseline input mode) and the three mobile modes: with index finger, thumb and in sway mode.
 # Difference in speed
@@ -236,5 +238,44 @@ ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode,
   geom_line() +
   labs(x = 'Input Mode', y = 'Error Rate in %')
 
+```
+
+## Statistical analysis
+```{r anova speed}
+fit_speed <- aov(MovementTime ~ Condition, data_raw)
+summary(fit_speed)
+m.res <- resid(fit_speed)
+plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime", main="Titel")
+```
+
+```{r anova accuracy}
+fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
+summary(fit_accuracy)
+m.res <- resid(fit_accuracy)
+plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate", main="Titel")
+```
+
+```{r anovy throughput}
+fit_throughput <- aov(Throughput ~ Condition, data_raw)
+summary(fit_throughput)
+m.res <- resid(fit_throughput)
+plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput", main="Titel")
+```
+
+We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
+
+```{r }
+TukeyHSD(fit_speed)
+plot(TukeyHSD(fit_speed), las=1)
+```
+
+```{r }
+TukeyHSD(fit_accuracy)
+plot(TukeyHSD(fit_accuracy), las=1)
+```
+
+```{r }
+TukeyHSD(fit_throughput)
+plot(TukeyHSD(fit_throughput), las=1)
 ```
 
