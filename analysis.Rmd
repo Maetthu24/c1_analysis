@@ -245,21 +245,21 @@ ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode,
 fit_speed <- aov(MovementTime ~ Condition, data_raw)
 summary(fit_speed)
 m.res <- resid(fit_speed)
-plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime", main="Titel")
+plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime")
 ```
 
 ```{r anova accuracy}
 fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
 summary(fit_accuracy)
 m.res <- resid(fit_accuracy)
-plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate", main="Titel")
+plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
 ```
 
 ```{r anovy throughput}
 fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
-plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput", main="Titel")
+plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
 ```
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
