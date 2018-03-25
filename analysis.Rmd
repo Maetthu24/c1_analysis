@@ -323,6 +323,7 @@ title(main = "Accuracy - 95% family-wise confidence level")
 
 
 #### Throughput
+
 ```{r tukeyhsd_throughput, echo=FALSE}
 TukeyHSD(fit_throughput)
 par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
