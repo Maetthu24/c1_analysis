@@ -192,7 +192,7 @@ average_troughput_per_participant <- aggregate(data_throughput[4:7], list(data_t
   rename('Participant' = Group.1, 'Trackpad' = Throughput_trackpad, 'Index Finger' = Throughput_index_finger, 'Thumb' = Throughput_thumb, 'Sway Mode' = Throughput_sway) %>%
   gather(key = Input_Mode, value = Average_Throughput, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_troughput_per_participant, mapping = aes(x = Input_Mode, y = Average_Throughput, col = Participant, group = Participant)) +
+ggplot (data = average_troughput_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Throughput, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Throughput in bits/s')
@@ -210,7 +210,7 @@ average_movement_time_per_participant <- aggregate(data_movement_time[4:7], list
   rename('Participant' = Group.1, 'Trackpad' = MovementTime_trackpad, 'Index Finger' = MovementTime_index_finger, 'Thumb' = MovementTime_thumb, 'Sway Mode' = MovementTime_sway) %>%
   gather(key = Input_Mode, value = Average_Movement_Time, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_movement_time_per_participant, mapping = aes(x = Input_Mode, y = Average_Movement_Time, col = Participant, group = Participant)) +
+ggplot (data = average_movement_time_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Movement_Time, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Movement Time in ms' )
@@ -278,7 +278,7 @@ average_error_rate_per_participant <- aggregate(data_error_rate[4:7], list(data_
   rename('Participant' = Group.1, 'Trackpad' = ErrorRate_trackpad, 'Index Finger' = ErrorRate_index_finger, 'Thumb' = ErrorRate_thumb, 'Sway Mode' = ErrorRate_sway) %>%
   gather(key = Input_Mode, value = Average_Error_Rate, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
-ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode, y = Average_Error_Rate, col = Participant, group = Participant)) +
+ggplot (data = average_error_rate_per_participant, mapping = aes(x = fct_relevel(Input_Mode, "Trackpad", "Index Finger", "Thumb", "Sway Mode"), y = Average_Error_Rate, col = Participant, group = Participant)) +
   geom_point() +
   geom_line() +
   labs(x = 'Input Mode', y = 'Error Rate in %')
@@ -290,21 +290,21 @@ ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode,
 fit_speed <- aov(MovementTime ~ Condition, data_raw)
 summary(fit_speed)
 m.res <- resid(fit_speed)
-plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime", main="Titel")
+plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime")
 ```
 
 ```{r anova accuracy}
 fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
 summary(fit_accuracy)
 m.res <- resid(fit_accuracy)
-plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate", main="Titel")
+plot(data_raw$ErrorRate, m.res, ylab="Residuals", xlab="ErrorRate")
 ```
 
 ```{r anovy throughput}
 fit_throughput <- aov(Throughput ~ Condition, data_raw)
 summary(fit_throughput)
 m.res <- resid(fit_throughput)
-plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput", main="Titel")
+plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
 ```
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
