@@ -132,51 +132,52 @@ data_spread <- merge(data_spread, data_movement_time)
 data_spread <- merge(data_spread, data_error_rate)
 data_spread <- merge(data_spread, data_throughput)
 
-data_spread <- data_spread %>% 
+data_spread <- data_spread %>%
   arrange(Participant, Amplitude, Width)
 
 ## In our analysis, we will not focus on the differences in amplitude and width. For this reason, we use the average for each participant for each mode.
-data_mean_per_participant <- data_spread %>%
-  group_by(Participant) %>% 
-  summarise(PointingTime_trackpad = mean(PointingTime_trackpad), PointingTime_index_finger = mean(PointingTime_index_finger), PointingTime_thumb = mean(PointingTime_thumb), PointingTime_sway = mean(PointingTime_sway), SelectionTime_trackpad = mean(SelectionTime_trackpad), SelectionTime_index_finger = mean(SelectionTime_index_finger), SelectionTime_thumb = mean(SelectionTime_thumb), SelectionTime_sway = mean(SelectionTime_sway), MovementTime_trackpad = mean(MovementTime_trackpad), MovementTime_index_finger = mean(MovementTime_index_finger), MovementTime_thumb = mean(MovementTime_thumb), MovementTime_sway = mean(MovementTime_sway), ErrorRate_trackpad = mean(ErrorRate_trackpad), ErrorRate_index_finger = mean(ErrorRate_index_finger), ErrorRate_thumb = mean(ErrorRate_thumb), ErrorRate_sway = mean(ErrorRate_sway), Throughput_trackpad = mean(Throughput_trackpad), Throughput_index_finger = mean(Throughput_index_finger), Throughput_thumb = mean(Throughput_thumb), Throughput_sway = mean(Throughput_sway))
+# data_mean_per_participant <- data_spread %>%
+#   group_by(Participant) %>% 
+#   summarise(PointingTime_trackpad = mean(PointingTime_trackpad), PointingTime_index_finger = mean(PointingTime_index_finger), PointingTime_thumb = mean(PointingTime_thumb), PointingTime_sway = mean(PointingTime_sway), SelectionTime_trackpad = mean(SelectionTime_trackpad), SelectionTime_index_finger = mean(SelectionTime_index_finger), SelectionTime_thumb = mean(SelectionTime_thumb), SelectionTime_sway = mean(SelectionTime_sway), MovementTime_trackpad = mean(MovementTime_trackpad), MovementTime_index_finger = mean(MovementTime_index_finger), MovementTime_thumb = mean(MovementTime_thumb), MovementTime_sway = mean(MovementTime_sway), ErrorRate_trackpad = mean(ErrorRate_trackpad), ErrorRate_index_finger = mean(ErrorRate_index_finger), ErrorRate_thumb = mean(ErrorRate_thumb), ErrorRate_sway = mean(ErrorRate_sway), Throughput_trackpad = mean(Throughput_trackpad), Throughput_index_finger = mean(Throughput_index_finger), Throughput_thumb = mean(Throughput_thumb), Throughput_sway = mean(Throughput_sway))
 
 
 ## We are intersted in the difference in speed and accuracy between the trackpad (baseline input mode) and the three mobile modes: with index finger, thumb and in sway mode.
 # Difference in speed
-speed_difference_to_trackpad <- data_spread %>% 
-  transmute(
-    Participant,
-    Amplitude,
-    Width,
-    IndexFinger_diff = MovementTime_index_finger - MovementTime_trackpad,
-    Thumb_diff = MovementTime_thumb - MovementTime_trackpad,
-    Sway_diff = MovementTime_sway - MovementTime_trackpad
-  )
-
-speed_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>% 
-  group_by(Participant) %>% 
-  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
+# speed_difference_to_trackpad <- data_spread %>%
+#   transmute(
+#     Participant,
+#     Amplitude,
+#     Width,
+#     IndexFinger_diff = MovementTime_index_finger - MovementTime_trackpad,
+#     Thumb_diff = MovementTime_thumb - MovementTime_trackpad,
+#     Sway_diff = MovementTime_sway - MovementTime_trackpad
+#   )
+# 
+# speed_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>%
+#   group_by(Participant) %>%
+#   summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
 
 # Difference in accuracy
-accuracy_difference_to_trackpad <- data_spread %>% 
-  transmute(
-    Participant,
-    Amplitude,
-    Width,
-    IndexFinger_diff = ErrorRate_index_finger - ErrorRate_trackpad,
-    Thumb_diff = ErrorRate_thumb - ErrorRate_trackpad,
-    Sway_diff = ErrorRate_sway - ErrorRate_trackpad
-  )
-
-accuracy_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>% 
-  group_by(Participant) %>% 
-  summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
+# accuracy_difference_to_trackpad <- data_spread %>% 
+#   transmute(
+#     Participant,
+#     Amplitude,
+#     Width,
+#     IndexFinger_diff = ErrorRate_index_finger - ErrorRate_trackpad,
+#     Thumb_diff = ErrorRate_thumb - ErrorRate_trackpad,
+#     Sway_diff = ErrorRate_sway - ErrorRate_trackpad
+#   )
+# 
+# accuracy_difference_to_trackpad_aggregated <- speed_difference_to_trackpad %>% 
+#   group_by(Participant) %>% 
+#   summarise(meanIndexFingerSpeed = mean(IndexFinger_diff), meanThumbSpeed = mean(Thumb_diff), meanSwaySpeed = mean(Sway_diff))
 
 ```
 
 ## Summary 
+
 ```{r summary}
-summary(speed_difference_to_trackpad_aggregated)
+# summary(speed_difference_to_trackpad_aggregated)
 ```
 
 ## Plots
@@ -289,14 +290,15 @@ ggplot (data = average_error_rate_per_participant, mapping = aes(x = fct_relevel
 ```
 
 ## Statistical analysis
-```{r anova speed}
+
+```{r anova_speed}
 fit_speed <- aov(MovementTime ~ Condition, data_raw)
 summary(fit_speed)
 m.res <- resid(fit_speed)
 plot(data_raw$MovementTime, m.res, ylab="Residuals", xlab="MovementTime")
 ```
 
-```{r anova accuracy}
+```{r anova_accuracy}
 fit_accuracy <- aov(ErrorRate ~ Condition, data_raw)
 summary(fit_accuracy)
 m.res <- resid(fit_accuracy)
@@ -313,18 +315,41 @@ plot(data_raw$Throughput, m.res, ylab="Residuals", xlab="Throughput")
 
 We understand from these ANOVA tests that not all the means are equals. We still have to search which pairs of conditions. For that purpose, we condcut a Post Hoc Test.
 
-```{r }
+### Tukey Test on the Speed
+```{r tukeyhsd_speed, echo=FALSE}
 TukeyHSD(fit_speed)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
+
+# This hack is used to set a more specific title than the default one generated by R
+par(col.main = "white")
 plot(TukeyHSD(fit_speed), las=1)
+par(col.main = "black")
+title(main = "Speed - 95% family-wise confidence level")
 ```
 
-```{r }
+
+### Tukey Test on the Accuracy
+```{r tukeyhsd_accuracy, echo=FALSE}
 TukeyHSD(fit_accuracy)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
+
+# This hack is used to set a more specific title than the default one generated by R
+par(col.main = "white")
 plot(TukeyHSD(fit_accuracy), las=1)
+par(col.main = "black")
+title(main = "Accuracy - 95% family-wise confidence level")
 ```
 
-```{r }
+
+### Tukey Test on the Throughput
+```{r tukeyhsd_throughput, echo=FALSE}
 TukeyHSD(fit_throughput)
+par(mar=c(5,10,4,2)+0.1) # Add additional margin to the left for fitting the label size
+
+# This hack is used to set a more specific title than the default one generated by R
+par(col.main = "white")
 plot(TukeyHSD(fit_throughput), las=1)
+par(col.main = "black")
+title(main = "Throughput - 95% family-wise confidence level")
 ```
 
