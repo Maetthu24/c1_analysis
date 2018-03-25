@@ -24,7 +24,7 @@ pacman::p_load(
 ```
 
 ## Data Import
-
+Our data is stored in different folder according to the input mode. For our analysis will use the files with the ending .sd2
 ```{r import}
 # Create a function that imports all .sd2 files from a directory
 import_raw_data_file <- function(dir_name, condition_name) {
@@ -49,11 +49,12 @@ data_raw <- rbind(
   import_raw_data_file("4_sway", "sway")
 )
 
+# Factorise condition
 data_raw$Condition <- as.factor(data_raw$Condition)
 ```
 
 ## Data Clean Up
-
+Before we start with the analysis, we will reduce the dataset to the necessary attributes and calcutate the aggregated values.
 ```{r clean up}
 # Keep only the columns of interest and give them more readable names
 data_raw <- data_raw %>% 
