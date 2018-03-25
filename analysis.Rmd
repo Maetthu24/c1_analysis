@@ -178,27 +178,63 @@ summary(speed_difference_to_trackpad_aggregated)
 
 ## Plots
 
-```{r plot1}
+```{r plots for troughputs}
 # Plot 1: Throughput for the 4 input modes for the eight participants
+
+# Boxplot of the average throughput that participants have for one pointing task
 boxplot_throughput <- boxplot(data_throughput[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
                               ylab = 'Throughput in bits/s')
 
+# Analysis of average troughput per input mode trial for each participant
+average_troughput_per_participant <- aggregate(data_throughput[4:7], list(data_throughput$Participant), mean) %>%
+  rename('Participant' = Group.1, 'Trackpad' = Throughput_trackpad, 'Index Finger' = Throughput_index_finger, 'Thumb' = Throughput_thumb, 'Sway Mode' = Throughput_sway) %>%
+  gather(key = Input_Mode, value = Average_Throughput, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
+
+ggplot (data = average_troughput_per_participant, mapping = aes(x = Input_Mode, y = Average_Throughput, col = Participant, group = Participant)) +
+  geom_point() +
+  geom_line() +
+  labs(x = 'Input Mode', y = 'Throughput in bits/s')
+
 ```
 
-```{r plot2}
+```{r plots for movement time}
 # Plot 2: Speed for the 4 input modes for the eight participants
+
+# Boxplot of the average time participant needed to finish one pointing task
 boxplot_movement_time <- boxplot(data_movement_time[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
                               ylab = 'Movement Time in ms')
 
+# Analysis of average moventtime per input mode trial for each participant
+average_movement_time_per_participant <- aggregate(data_movement_time[4:7], list(data_movement_time$Participant), mean) %>%
+  rename('Participant' = Group.1, 'Trackpad' = MovementTime_trackpad, 'Index Finger' = MovementTime_index_finger, 'Thumb' = MovementTime_thumb, 'Sway Mode' = MovementTime_sway) %>%
+  gather(key = Input_Mode, value = Average_Movement_Time, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
 
+ggplot (data = average_movement_time_per_participant, mapping = aes(x = Input_Mode, y = Average_Movement_Time, col = Participant, group = Participant)) +
+  geom_point() +
+  geom_line() +
+  labs(x = 'Input Mode', y = 'Movement Time in ms' )
+  # ggtitle('Average movement time participants used to finish one pointing task depending on the input mode they used.')
 
 
 ```
 
-```{r plot3}
+```{r plots for error rate}
 # Plot 3: Accuracy for the 4 input modes for the eight participants
+
+# Boxplot of the average error rate that participants have for one pointing task
 boxplot_error_rate <- boxplot(data_error_rate[4:7], names = c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'), xlab = 'Input Mode',
                               ylab = 'Error Rate in %')
+
+
+# Analysis of average error rate per input mode trial for each participant
+average_error_rate_per_participant <- aggregate(data_error_rate[4:7], list(data_error_rate$Participant), mean) %>%
+  rename('Participant' = Group.1, 'Trackpad' = ErrorRate_trackpad, 'Index Finger' = ErrorRate_index_finger, 'Thumb' = ErrorRate_thumb, 'Sway Mode' = ErrorRate_sway) %>%
+  gather(key = Input_Mode, value = Average_Error_Rate, c('Trackpad', 'Index Finger', 'Thumb', 'Sway Mode'))
+
+ggplot (data = average_error_rate_per_participant, mapping = aes(x = Input_Mode, y = Average_Error_Rate, col = Participant, group = Participant)) +
+  geom_point() +
+  geom_line() +
+  labs(x = 'Input Mode', y = 'Error Rate in %')
 
 ```
 
